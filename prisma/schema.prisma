@@ -15,7 +15,7 @@ datasource db {
 
 model Audiencia {
   id            Int      @id @default(autoincrement())
-  data          DateTime
+  data          String
   hora          String
   processo      String   @unique
   orgaoJulgador String
@@ -24,16 +24,20 @@ model Audiencia {
   tipoAudiencia String
   sala          String
   situacao      String
+  dataGeracao   DateTime
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+  pautaId       Int?
+  pauta         Pauta?    @relation(fields: [pautaId], references: [id])
 }
 
 model Pauta {
   id            Int      @id @default(autoincrement())
-  data          DateTime
+  data          String
   turno         String
   orgaoJulgador String
   sala          String
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+  audiencias    Audiencia[]
 }

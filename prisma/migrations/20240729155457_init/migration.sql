@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "Audiencia" ALTER COLUMN "data" SET DATA TYPE TEXT;
+
+-- AlterTable
+ALTER TABLE "Pauta" ALTER COLUMN "data" SET DATA TYPE TEXT;
