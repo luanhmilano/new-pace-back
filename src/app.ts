@@ -1,30 +1,41 @@
 import express from 'express';
+import cors from 'cors';
 import { json } from 'body-parser';
-import multer from 'multer';
-import { createAudiencia, getAudiencias } from './controllers/audienciaController';
-import { createPauta, getPautas } from './controllers/pautaController';
+import { upload } from './middlewares/uploadMiddleware';
+import { extractInfoMiddleware } from './middlewares/extractInfoMiddleware';
 import { processExcel } from './services/excelProcessor';
+import { createAudiencia, getAudiencias, getAudienciaById, updateAudiencia, deleteAudiencia } from './controllers/audienciaController';
+import { organizePautas } from './controllers/pautaController';
+import { resetData } from './controllers/resetController';
+import { organizeAudienciasInPautas } from './services/PautaService';
 
 const app = express();
-const upload = multer({ dest: 'uploads/' });
 
+app.use(cors());
 app.use(json());
 
-app.post('/upload', upload.single('file'), async (req, res) => {
-    if (!req.file) {
-        return res.status(400).send('No file uploaded.');
-    }
-    const audiencias = await processExcel(req.file.path);
-    res.status(201).json(audiencias);
+// Rota para upload de arquivos Excel
+app.post('/upload', upload.single('file'), extractInfoMiddleware, async (req, res) => {
+  try {
+    const audiencias = await processExcel(req.file!.path, req.body.fileGenerationDate);
+    await organizeAudienciasInPautas(); // Organiza as pautas após o upload, sem enviar resposta
+    res.status(201).send("Siiiiu"); // Envia a resposta aqui
+  } catch (error: any) {
+    res.status(400).json({ error: error.message });
+  }
 });
 
+// Rotas de CRUD para audiências
 app.post('/audiencias', createAudiencia);
 app.get('/audiencias', getAudiencias);
+app.get('/audiencias/:id', getAudienciaById);
+app.put('/audiencias/:id', updateAudiencia);
+app.delete('/audiencias/:id', deleteAudiencia);
 
-app.post('/pautas', createPauta);
-app.get('/pautas', getPautas);
+// Rota para organizar pautas
+app.post('/organize-pautas', organizePautas);
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+// Rota para resetar dados
+app.post('/reset-data', resetData);
+
+export default app;
