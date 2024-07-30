@@ -12,14 +12,14 @@ export const organizeAudienciasInPautas = async (): Promise<void> => {
   const pautasMap = new Map<string, Pauta>();
 
   for (const audiencia of audiencias) {
-    const key = `${audiencia.data}-${determineTurno(audiencia.hora)}-${audiencia.orgaoJulgador}-${audiencia.sala}`;
+    const key = `${audiencia.data}-${determineTurno(audiencia.hora)}-${audiencia.orgao_julgador}-${audiencia.sala}`;
 
     if (!pautasMap.has(key)) {
       let pauta = await prisma.pauta.findFirst({
         where: {
           data: audiencia.data,
           turno: determineTurno(audiencia.hora),
-          orgaoJulgador: audiencia.orgaoJulgador,
+          orgao_julgador: audiencia.orgao_julgador,
           sala: audiencia.sala,
         },
       });
@@ -29,7 +29,7 @@ export const organizeAudienciasInPautas = async (): Promise<void> => {
           data: {
             data: audiencia.data,
             turno: determineTurno(audiencia.hora),
-            orgaoJulgador: audiencia.orgaoJulgador,
+            orgao_julgador: audiencia.orgao_julgador,
             sala: audiencia.sala,
           },
         });

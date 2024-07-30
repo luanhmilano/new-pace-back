@@ -23,17 +23,17 @@ export const processExcel = async (filePath: string, fileGenerationDate: Date): 
   }
 
   const lastProcessedDate = await prisma.audiencia.findFirst({
-    orderBy: { dataGeracao: 'desc' },
-    select: { dataGeracao: true },
+    orderBy: { data_geracao: 'desc' },
+    select: { data_geracao: true },
   });
 
-  if (lastProcessedDate && fileGenerationDate <= lastProcessedDate.dataGeracao) {
+  if (lastProcessedDate && fileGenerationDate <= lastProcessedDate.data_geracao) {
     throw new Error('Uploaded file is not the most recent.');
   }
 
   const json = readExcelFile(filePath);
   const cleanedData = cleanDataSet(json);
-  //console.log(cleanedData)
+  //console.log(json)
 
   const audiencias: Audiencia[] = [];
 
@@ -82,13 +82,13 @@ export const processExcel = async (filePath: string, fileGenerationDate: Date): 
       data: formattedDate,
       hora: timePart,
       processo,
-      orgaoJulgador: row['Órgão Julgador'],
+      orgao_julgador: row['Órgão Julgador'],
       partes: (row.Partes).split(' - ')[0],
       classe: row.Classe,
-      tipoAudiencia: row['Tipo de audiência'],
+      tipo_audiencia: row['Tipo de audiência'],
       sala: String(row.Sala),
       situacao: row.Situação,
-      dataGeracao: fileGenerationDate,
+      data_geracao: fileGenerationDate,
     };
 
     if (existingAudiencia) {

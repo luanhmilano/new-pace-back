@@ -15,8 +15,10 @@ const cleanData = (item: any): any => {
   const dateKey = Object.keys(item).find(key => key.startsWith("Todas as expressões"));
   const dataValue = dateKey ? sanitizeText(item[dateKey]) : '';
 
+  //console.log(dataValue)
+
   const cleanedItem = {
-    Data: dataValue,
+    Data: dataValue || item['Data'],
     Processo: sanitizeText(item['Processo'] || item['__EMPTY']),
     'Órgão Julgador': sanitizeText(item['Órgão julgador'] || item['__EMPTY_1']),
     Partes: sanitizeText(item['Partes'] || item['__EMPTY_2']),
@@ -30,7 +32,6 @@ const cleanData = (item: any): any => {
 };
 
 export const cleanDataSet = (dataSet: any[]): any[] => {
-  return dataSet
-    .filter(item => !isHeaderRow(item))
-    .map(cleanData);
+  
+  return dataSet.map(cleanData);
 };
