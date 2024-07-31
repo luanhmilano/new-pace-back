@@ -28,6 +28,7 @@ model Audiencia {
   created_at     DateTime @default(now())
   updated_at     DateTime @updatedAt
   pautaId       Int?
+  turno         String
   pauta         Pauta?    @relation(fields: [pautaId], references: [id])
 }
 
