@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { AudienciaService } from '../services/AudienciaService';
+import { generateExcel } from '../utils/excelGenerator';
 
 const audienciaService = new AudienciaService();
 
@@ -51,3 +52,17 @@ export const deleteAudiencia = async (req: Request, res: Response) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+export const exportAudiencias = async (_req: Request, res: Response) => {
+  try {
+    const audiencias = await audienciaService.getAllAudiencias();
+    const excelBuffer = generateExcel(audiencias);
+
+    res.setHeader('Content-Disposition', 'attachment; filename=audiencias.xlsx');
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.send(excelBuffer);
+
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+}
