@@ -1,34 +1,15 @@
-import { cleanDataSet } from '../utils/cleanData';
-import prisma from '../config/prisma';
 import { Audiencia } from '@prisma/client';
-import fs from 'fs';
+import { cleanDataSet } from '../utils/cleanData';
 import { readExcelFile } from '../utils/excel';
-
-const determineTurno = (hora: string): string => {
-  const [hour] = hora.split(':').map(Number);
-  return hour < 13 ? 'MANHÃ' : 'TARDE';
-};
-
-const logChanges = (existing: Audiencia, updated: Partial<Audiencia>) => {
-  const changes = [];
-  if (existing.data !== updated.data) changes.push(`Data: ${existing.data} -> ${updated.data}`);
-  if (existing.hora !== updated.hora) changes.push(`Hora: ${existing.hora} -> ${updated.hora}`);
-  if (existing.orgao_julgador !== updated.orgao_julgador) changes.push(`Órgão Julgador: ${existing.orgao_julgador} -> ${updated.orgao_julgador}`);
-  if (existing.partes !== updated.partes) changes.push(`Partes: ${existing.partes} -> ${updated.partes}`);
-  if (existing.classe !== updated.classe) changes.push(`Classe: ${existing.classe} -> ${updated.classe}`);
-  if (existing.tipo_audiencia !== updated.tipo_audiencia) changes.push(`Tipo de audiência: ${existing.tipo_audiencia} -> ${updated.tipo_audiencia}`);
-  if (existing.sala !== updated.sala) changes.push(`Sala: ${existing.sala} -> ${updated.sala}`);
-  if (existing.situacao !== updated.situacao) changes.push(`Situação: ${existing.situacao} -> ${updated.situacao}`);
-  if (existing.turno !== updated.turno) changes.push(`Turno: ${existing.turno} -> ${updated.turno}`);
-
-  if (changes.length > 0) {
-    console.log(`Changes for processo ${existing.processo}:`);
-    changes.forEach(change => console.log(`  - ${change}`));
-  }
-};
+import { extractPartes } from '../utils/partesExtractor';
+import { logChanges } from '../utils/changeLogger';
+import { determineTurno } from '../utils/helps/determineTurno';
+import prisma from '../config/prisma';
+import fs from 'fs';
 
 export const processExcel = async (filePath: string, fileGenerationDate: Date): Promise<Audiencia[]> => {
-    console.log(filePath)
+  console.log(filePath)
+
   // Verifique se o arquivo existe
   if (!fs.existsSync(filePath)) {
     throw new Error(`File not found: ${filePath}`);
@@ -45,7 +26,6 @@ export const processExcel = async (filePath: string, fileGenerationDate: Date): 
 
   const json = readExcelFile(filePath);
   const cleanedData = cleanDataSet(json);
-  //console.log(json)
 
   const audiencias: Audiencia[] = [];
 
@@ -54,11 +34,6 @@ export const processExcel = async (filePath: string, fileGenerationDate: Date): 
     const [datePart, timePart] = (row.Data).split(' ');
     //console.log(datePart)
 
-    if (!datePart || !timePart) {
-        //console.warn(`Invalid date or time format for row: ${JSON.stringify(row)}`);
-        continue;
-    }
-
     const dateParts = datePart.split('/');
     if (dateParts.length !== 3) {
       console.warn(`Invalid date format for row: ${JSON.stringify(row)}`);
@@ -66,14 +41,12 @@ export const processExcel = async (filePath: string, fileGenerationDate: Date): 
     }
 
     const day = parseInt(dateParts[0], 10);
-    const month = parseInt(dateParts[1], 10) - 1; // Months are 0-based in JavaScript Date
+    const month = parseInt(dateParts[1], 10) - 1;
     let year = parseInt(dateParts[2], 10);
 
     if (year < 100) {
         year += 2000;
     }
-
-    //console.log(`Parsed date parts - day: ${day}, month: ${month + 1}, year: ${year}`);
 
     const date = new Date(year, month, day);
     if (isNaN(date.getTime())) {
@@ -82,7 +55,6 @@ export const processExcel = async (filePath: string, fileGenerationDate: Date): 
     }
 
     const formattedDate = date.toISOString().split('T')[0]; // Formata a data como "YYYY-MM-DD"
-    const turno = determineTurno(timePart);
 
     const processo = row.Processo;
 
@@ -91,8 +63,10 @@ export const processExcel = async (filePath: string, fileGenerationDate: Date): 
     });
 
     let initialDataGeracao = fileGenerationDate;
+    let existingChanges = '';
     if (existingAudiencia) {
       initialDataGeracao = existingAudiencia.data_geracao;
+      existingChanges = existingAudiencia.changes || '';
     }
 
     const audienciaData = {
@@ -100,43 +74,38 @@ export const processExcel = async (filePath: string, fileGenerationDate: Date): 
       hora: timePart,
       processo,
       orgao_julgador: row['Órgão Julgador'],
-      partes: (row.Partes).split(' - ')[0],
+      partes: extractPartes(row.Partes),
       classe: row.Classe,
       tipo_audiencia: row['Tipo de audiência'],
       sala: String(row.Sala),
       situacao: row.Situação,
       data_geracao: initialDataGeracao,
-      turno: turno,
+      turno: determineTurno(timePart),
+      changes: existingChanges,
     };
 
     if (existingAudiencia) {
       // Verifique se alguma informação mudou
-      const hasChanges = 
-        existingAudiencia.data !== audienciaData.data ||
-        existingAudiencia.hora !== audienciaData.hora ||
-        existingAudiencia.orgao_julgador !== audienciaData.orgao_julgador ||
-        existingAudiencia.partes !== audienciaData.partes ||
-        existingAudiencia.classe !== audienciaData.classe ||
-        existingAudiencia.tipo_audiencia !== audienciaData.tipo_audiencia ||
-        existingAudiencia.sala !== audienciaData.sala ||
-        existingAudiencia.situacao !== audienciaData.situacao ||
-        existingAudiencia.turno !== audienciaData.turno;
+      const changes = logChanges(existingAudiencia, audienciaData);
 
-      if (hasChanges) {
-        logChanges(existingAudiencia, audienciaData);
-        // Atualizar somente os campos alterados e a data de geração
+      if (changes.length > 0) {
+        const changesText = changes.join('; ');
+        audienciaData.changes =  `${existingChanges}${existingChanges ? '; ' : ''}${changesText}`;
+        console.log(`Changes for processo ${existingAudiencia.processo}:`);
+        changes.forEach(change => console.log(`  - ${change}`));
+
         const updatedAudiencia = await prisma.audiencia.update({
           where: { processo },
-          data: { 
+          data: {
             ...audienciaData,
-            data_geracao: fileGenerationDate, // Atualiza a data de geração
+            data_geracao: fileGenerationDate,
           },
         });
-        audiencias.push(updatedAudiencia);
+        audiencias.push(updatedAudiencia)
       } else {
-        // Se não houver mudanças, mantenha a audiência existente
         audiencias.push(existingAudiencia);
       }
+
     } else {
       const newAudiencia = await prisma.audiencia.create({
         data: audienciaData,

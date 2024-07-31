@@ -3,8 +3,10 @@ import { Audiencia } from '@prisma/client';
 
 export const generateExcel = (audiencias: Audiencia[]): Buffer => {
     const data = audiencias.map(audiencia => ({
+        'Pauta ID': audiencia.pautaId,
         Data: audiencia.data,
         Hora: audiencia.hora,
+        Turno: audiencia.turno,
         Processo: audiencia.processo,
         'Órgão Julgador': audiencia.orgao_julgador,
         Partes: audiencia.partes,
@@ -13,8 +15,7 @@ export const generateExcel = (audiencias: Audiencia[]): Buffer => {
         Sala: audiencia.sala,
         Situação: audiencia.situacao,
         'Data de Geração': audiencia.data_geracao,
-        'Pauta ID': audiencia.pautaId,
-        Turno: audiencia.turno,
+        'Mudanças': audiencia.changes,
     }));
 
     const worksheet = xlsx.utils.json_to_sheet(data);

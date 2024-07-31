@@ -1,9 +1,3 @@
-const possibleHeaders = ['Data', 'Processo', 'Órgão julgador', 'Partes', 'Classe', 'Tipo de audiência', 'Sala', 'Situação'];
-
-const isHeaderRow = (item: any): boolean => {
-  return possibleHeaders.every(header => Object.keys(item).includes(header));
-};
-
 const sanitizeText = (text: any): string => {
   if (typeof text === 'string') {
     return text.replace(/[\r\n]+/g, '');
@@ -14,8 +8,6 @@ const sanitizeText = (text: any): string => {
 const cleanData = (item: any): any => {
   const dateKey = Object.keys(item).find(key => key.startsWith("Todas as expressões"));
   const dataValue = dateKey ? sanitizeText(item[dateKey]) : '';
-
-  //console.log(dataValue)
 
   const cleanedItem = {
     Data: dataValue || item['Data'],
