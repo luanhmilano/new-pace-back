@@ -25,10 +25,9 @@ model Audiencia {
   sala          String
   situacao      String
   data_geracao   DateTime
-  created_at     DateTime @default(now())
-  updated_at     DateTime @updatedAt
   pautaId       Int?
   turno         String
+  changes       String?
   pauta         Pauta?    @relation(fields: [pautaId], references: [id])
 }
 
