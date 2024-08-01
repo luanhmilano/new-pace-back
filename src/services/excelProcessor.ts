@@ -36,7 +36,7 @@ export const processExcel = async (filePath: string, fileGenerationDate: Date): 
 
     const dateParts = datePart.split('/');
     if (dateParts.length !== 3) {
-      console.warn(`Invalid date format for row: ${JSON.stringify(row)}`);
+      //console.warn(`Invalid date format for row: ${JSON.stringify(row)}`);
       continue;
     }
 
@@ -47,6 +47,8 @@ export const processExcel = async (filePath: string, fileGenerationDate: Date): 
     if (year < 100) {
         year += 2000;
     }
+
+    console.log(`Parsed date parts - day: ${day}, month: ${month + 1}, year: ${year}`);
 
     const date = new Date(year, month, day);
     if (isNaN(date.getTime())) {
@@ -89,8 +91,9 @@ export const processExcel = async (filePath: string, fileGenerationDate: Date): 
       const changes = logChanges(existingAudiencia, audienciaData);
 
       if (changes.length > 0) {
-        const changesText = changes.join('; ');
-        audienciaData.changes =  `${existingChanges}${existingChanges ? '; ' : ''}${changesText}`;
+        const changesText = changes.join('\n');
+        const dateText = `${fileGenerationDate.toISOString().split('T')[0]} \n${changesText}\n`;
+        audienciaData.changes = `${existingChanges}${existingChanges ? '\n' : ''}${dateText}`;
         console.log(`Changes for processo ${existingAudiencia.processo}:`);
         changes.forEach(change => console.log(`  - ${change}`));
 

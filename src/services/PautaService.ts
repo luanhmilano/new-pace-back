@@ -1,10 +1,6 @@
 import prisma from '../config/prisma';
 import { Audiencia, Pauta } from '@prisma/client';
-
-const determineTurno = (hora: string): string => {
-  const [hour] = hora.split(':').map(Number);
-  return hour < 13 ? 'MANHÃ' : 'TARDE';
-};
+import { determineTurno } from '../utils/helps/determineTurno';
 
 export const organizeAudienciasInPautas = async (): Promise<void> => {
   const audiencias = await prisma.audiencia.findMany();
