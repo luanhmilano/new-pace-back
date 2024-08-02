@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "dist/app.js",
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "dev": "dotenv -e .env.development -- ts-node-dev --respawn --transpile-only src/server.ts",
+    "prod": "dotenv -e .env.production -- ts-node-dev --respawn --transpile-only src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js",
     "prisma:migrate": "prisma migrate dev --name init --preview-feature",
@@ -16,6 +17,7 @@
   "dependencies": {
     "@prisma/client": "^5.17.0",
     "cors": "^2.8.5",
+    "dotenv-cli": "^7.4.2",
     "express": "^4.19.2",
     "multer": "^1.4.5-lts.1",
     "new-pace-back": "file:",

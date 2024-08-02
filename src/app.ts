@@ -19,6 +19,7 @@ app.post('/upload', upload.single('file'), extractInfoMiddleware, async (req, re
   try {
     const audiencias = await processExcel(req.file!.path, req.body.fileGenerationDate);
     await organizeAudienciasInPautas(); // Organiza as pautas após o upload, sem enviar resposta
+    console.log("Audiências extraídas com sucesso.")
     res.status(201).send("Siiiiu"); // Envia a resposta aqui
   } catch (error: any) {
     res.status(400).json({ error: error.message });
