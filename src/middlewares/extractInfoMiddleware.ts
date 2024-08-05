@@ -18,6 +18,8 @@ export const extractInfoMiddleware = (req: Request, res: Response, next: NextFun
   try {
     const fileGenerationDate = extractDateFromFileName(req.file.originalname);
     req.body.fileGenerationDate = fileGenerationDate;
+    console.log("---DATA")
+    console.log(fileGenerationDate);
     next();
   } catch (error: any) {
     res.status(400).json({ error: error.message });

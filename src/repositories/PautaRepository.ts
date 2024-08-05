@@ -2,7 +2,7 @@ import { PrismaClient, Pauta } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export class PautaRepository {
+class PautaRepository {
   async create(data: Omit<Pauta, 'id' | 'createdAt' | 'updatedAt'>): Promise<Pauta> {
     return prisma.pauta.create({
       data,
@@ -19,6 +19,15 @@ export class PautaRepository {
     });
   }
 
+  async findByIdWithAudiencias(id: number): Promise<Pauta | null> {
+    return prisma.pauta.findUnique({
+      where: { id },
+      include: {
+        audiencias: true, // Inclui as audiências relacionadas à pauta
+      },
+    });
+  }
+
   async update(id: number, data: Partial<Omit<Pauta, 'id' | 'createdAt' | 'updatedAt'>>): Promise<Pauta> {
     return prisma.pauta.update({
       where: { id },
@@ -32,3 +41,5 @@ export class PautaRepository {
     });
   }
 }
+
+export default new PautaRepository();

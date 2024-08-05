@@ -1,6 +1,8 @@
 import prisma from '../config/prisma';
 import { Audiencia, Pauta } from '@prisma/client';
 import { determineTurno } from '../utils/helps/determineTurno';
+import PautaRepository from '../repositories/PautaRepository';
+
 
 export const organizeAudienciasInPautas = async (): Promise<void> => {
   const audiencias = await prisma.audiencia.findMany();
@@ -42,3 +44,32 @@ export const organizeAudienciasInPautas = async (): Promise<void> => {
     });
   }
 };
+
+class PautaService {
+  async create(data: Pauta): Promise<Pauta> {
+    return PautaRepository.create(data);
+  }
+
+  async getAll(): Promise<Pauta[]> {
+    return PautaRepository.findAll();
+  }
+
+  async getById(id: number): Promise<Pauta | null> {
+    return PautaRepository.findById(id);
+  }
+
+  async getByIdWithAudiencias(id: number): Promise<Pauta | null> {
+    return PautaRepository.findByIdWithAudiencias(id);
+  }
+
+  async update(id: number, data: Partial<Pauta>): Promise<Pauta> {
+    return PautaRepository.update(id, data);
+  }
+
+  async delete(id: number): Promise<Pauta> {
+    return PautaRepository.delete(id);
+  }
+
+}
+
+export default new PautaService();

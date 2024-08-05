@@ -8,11 +8,14 @@ import { createAudiencia, getAudiencias, getAudienciaById, updateAudiencia, dele
 import { organizePautas } from './controllers/pautaController';
 import { resetData } from './controllers/resetController';
 import { organizeAudienciasInPautas } from './services/PautaService';
+import routes from './routes/routes';
 
 const app = express();
 
 app.use(cors());
 app.use(json());
+
+app.use(routes)
 
 // Rota para upload de arquivos Excel
 app.post('/upload', upload.single('file'), extractInfoMiddleware, async (req, res) => {
