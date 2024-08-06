@@ -6,6 +6,7 @@ import * as xlsx from 'xlsx';
  * @param filePath - Caminho do arquivo Excel.
  * @returns Conteúdo do arquivo Excel em formato JSON.
  */
+
 export const readExcelFile = (filePath: string): any[] => {
   const workbook = xlsx.readFile(filePath);
   const sheetNameList = workbook.SheetNames;

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { generateExcel } from '../utils/excelGenerator';
-import AudienciaService from '../services/AudienciaService';
+import AudienciaService from '../services/audiencia.service';
 
 
 class AudienciaController {

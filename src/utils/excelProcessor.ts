@@ -1,11 +1,11 @@
-import { Audiencia } from '@prisma/client';
-import { cleanDataSet } from '../utils/cleanData';
-import { readExcelFile } from '../utils/excel';
-import { extractPartes } from '../utils/partesExtractor';
-import { logChanges } from '../utils/changeLogger';
-import { determineTurno } from '../utils/helps/determineTurno';
 import prisma from '../config/prisma';
 import fs from 'fs';
+import { Audiencia } from '@prisma/client';
+import { readExcelFile } from './helps/excel';
+import { logChanges } from './helps/changeLogger';
+import { cleanDataSet } from './helps/cleanData';
+import { extractPartes } from './helps/partesExtractor';
+import { determineTurno } from './helps/determineTurno';
 
 export const processExcel = async (filePath: string, fileGenerationDate: Date): Promise<Audiencia[]> => {
   console.log(filePath)

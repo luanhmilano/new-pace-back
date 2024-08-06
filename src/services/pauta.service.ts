@@ -1,5 +1,5 @@
 import { Pauta } from '@prisma/client';
-import PautaRepository from '../repositories/PautaRepository';
+import PautaRepository from '../repositories/pauta.repository';
 
 class PautaService {
   async create(data: Pauta): Promise<Pauta> {

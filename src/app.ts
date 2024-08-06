@@ -1,10 +1,10 @@
 import express from 'express';
 import cors from 'cors';
 import { json } from 'body-parser';
-import { upload } from './middlewares/uploadMiddleware';
-import { extractInfoMiddleware } from './middlewares/extractInfoMiddleware';
-import { processExcel } from './services/excelProcessor';
-import { resetData } from './controllers/resetController';
+import { upload } from './middlewares/upload.middleware';
+import { extractInfoMiddleware } from './middlewares/extractInfo.middleware';
+import { processExcel } from './utils/excelProcessor';
+import { resetData } from './controllers/reset.controller';
 import routes from './routes/routes';
 import { organizeAudienciasInPautas } from './utils/organizePautas';
 import { setupSwagger } from './swagger';

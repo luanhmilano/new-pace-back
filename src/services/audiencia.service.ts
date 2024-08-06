@@ -1,5 +1,5 @@
 import { Audiencia } from "@prisma/client";
-import { AudienciaRepository } from "../repositories/AudienciaRepository";
+import { AudienciaRepository } from "../repositories/audiencia.repository";
 
 class AudienciaService {
     private audienciaRepository: AudienciaRepository;

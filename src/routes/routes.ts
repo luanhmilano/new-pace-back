@@ -1,6 +1,6 @@
 import { Router } from "express";
-import PautaController from "../controllers/pautaController";
-import AudienciaController from "../controllers/audienciaController";
+import PautaController from "../controllers/pauta.controller";
+import AudienciaController from "../controllers/audiencia.controller";
 
 const routes = Router();
 

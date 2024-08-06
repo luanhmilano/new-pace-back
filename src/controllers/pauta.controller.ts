@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
-import PautaService from '../services/PautaService';
-import { organizeAudienciasInPautas } from '../utils/organizePautas';
+import PautaService from '../services/pauta.service';
 
 /**
  * @swagger

@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { processExcel } from "../services/excelProcessor";
+import { processExcel } from "../utils/excelProcessor";
 import fs from 'fs';
 import path from 'path';
 

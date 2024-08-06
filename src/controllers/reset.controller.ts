@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { resetAudienciasAndPautas } from '../services/resetService';
+import { resetAudienciasAndPautas } from '../services/reset.service';
 
 export const resetData = async (_req: Request, res: Response) => {
   try {
