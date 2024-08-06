@@ -4,7 +4,7 @@ import { json } from 'body-parser';
 import { upload } from './middlewares/uploadMiddleware';
 import { extractInfoMiddleware } from './middlewares/extractInfoMiddleware';
 import { processExcel } from './services/excelProcessor';
-import { createAudiencia, getAudiencias, getAudienciaById, updateAudiencia, deleteAudiencia, exportAudiencias } from './controllers/audienciaController';
+import { createAudiencia, getAudiencias, getAudienciaById, updateAudiencia, deleteAudiencia, exportAudiencias, getAudienciasByFilters } from './controllers/audienciaController';
 import { organizePautas } from './controllers/pautaController';
 import { resetData } from './controllers/resetController';
 import { organizeAudienciasInPautas } from './services/PautaService';
@@ -44,5 +44,8 @@ app.post('/reset-data', resetData);
 
 // Rota para exportar audiências para Excel
 app.get('/export-audiencias', exportAudiencias);
+
+// Rota pde GET com filtros
+app.get('/audiencias-filter', getAudienciasByFilters);
 
 export default app;

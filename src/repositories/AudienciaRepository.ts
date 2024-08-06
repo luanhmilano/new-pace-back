@@ -31,4 +31,26 @@ export class AudienciaRepository {
           where: { id },
         });
     }
+
+    async findByFilters(filters: {
+        startDate?: string;
+        endDate?: string;
+        turno?: string;
+        orgao_julgador?: string;
+        sala?: string;
+    }): Promise<Audiencia[]> {
+        const { startDate, endDate, turno, orgao_julgador, sala } = filters;
+
+        return prisma.audiencia.findMany({
+            where: {
+                data: {
+                    gte: startDate,
+                    lte: endDate,
+                },
+                turno: turno || undefined,
+                orgao_julgador: orgao_julgador || undefined,
+                sala: sala || undefined,
+            },
+        });
+    }
 }

@@ -27,4 +27,14 @@ export class AudienciaService {
     async deleteAudiencia(id: number): Promise<Audiencia> {
         return this.audienciaRepository.delete(id);
     }
+
+    async getByFilters(filters: {
+        startDate?: string;
+        endDate?: string;
+        turno?: string;
+        orgao_julgador?: string;
+        sala?: string;
+    }): Promise<Audiencia[]> {
+        return this.audienciaRepository.findByFilters(filters);
+    }
 }

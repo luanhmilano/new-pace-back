@@ -66,3 +66,20 @@ export const exportAudiencias = async (_req: Request, res: Response) => {
     res.status(500).json({ error: error.message });
   }
 }
+
+export const getAudienciasByFilters = async (req: Request, res: Response): Promise<Response> => {
+  try {
+    const filters = {
+      startDate: req.query.startDate as string,
+      endDate: req.query.endDate as string,
+      turno: req.query.turno as string,
+      orgao_julgador: req.query.orgao_julgador as string,
+      sala: req.query.sala as string,
+    };
+    
+    const audiencias = await audienciaService.getByFilters(filters);
+    return res.status(200).json(audiencias);
+  } catch (error: any) {
+    return res.status(500).json({ error: error.message });
+  }
+}
