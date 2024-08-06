@@ -11,4 +11,5 @@ if (PORT == '3000') {
 
 app.listen(PORT, () => {
   console.log(`New Pace is running on port ${PORT}`);
+  console.log(`Swagger docs available at http://localhost:${PORT}/api-docs`);
 });
