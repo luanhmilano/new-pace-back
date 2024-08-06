@@ -1,7 +1,7 @@
 import { Audiencia } from "@prisma/client";
 import { AudienciaRepository } from "../repositories/AudienciaRepository";
 
-export class AudienciaService {
+class AudienciaService {
     private audienciaRepository: AudienciaRepository;
 
     constructor() {
@@ -38,3 +38,5 @@ export class AudienciaService {
         return this.audienciaRepository.findByFilters(filters);
     }
 }
+
+export default new AudienciaService();
