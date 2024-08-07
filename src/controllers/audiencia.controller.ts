@@ -341,6 +341,7 @@ class AudienciaController {
       };
       
       const audiencias = await AudienciaService.getByFilters(filters);
+      console.log("Cura Mudez")
       return res.status(200).json(audiencias);
     } catch (error: any) {
       return res.status(500).json({ error: error.message });
