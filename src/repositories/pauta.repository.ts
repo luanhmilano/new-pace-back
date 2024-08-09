@@ -3,7 +3,9 @@ import { PrismaClient, Pauta } from '@prisma/client';
 const prisma = new PrismaClient();
 
 class PautaRepository {
-  async create(data: Omit<Pauta, 'id' | 'createdAt' | 'updatedAt'>): Promise<Pauta> {
+  async create(
+    data: Omit<Pauta, 'id' | 'createdAt' | 'updatedAt'>,
+  ): Promise<Pauta> {
     return prisma.pauta.create({
       data,
     });
@@ -28,7 +30,10 @@ class PautaRepository {
     });
   }
 
-  async update(id: number, data: Partial<Omit<Pauta, 'id' | 'createdAt' | 'updatedAt'>>): Promise<Pauta> {
+  async update(
+    id: number,
+    data: Partial<Omit<Pauta, 'id' | 'createdAt' | 'updatedAt'>>,
+  ): Promise<Pauta> {
     return prisma.pauta.update({
       where: { id },
       data,

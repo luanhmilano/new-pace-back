@@ -6,11 +6,10 @@ import PautaService from '../services/pauta.service';
  * tags:
  *  name: Pautas
  *  description: Operações relacionadas a pautas
- *  
+ *
  */
 
 class PautaController {
-
   /**
    * @swagger
    * /pautas:
@@ -33,7 +32,7 @@ class PautaController {
    *                 type: string
    *               sala:
    *                 type: string
-   *             example: 
+   *             example:
    *               data: '2024-07-25'
    *               turno: 'MANHÃ'
    *               orgao_julgador: 'Orgão Julgador'
@@ -53,8 +52,11 @@ class PautaController {
     try {
       const pauta = await PautaService.create(req.body);
       return res.status(201).json(pauta);
-    } catch (error: any) {
-      return res.status(500).json({ error: error.message });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return res.status(500).json({ error: error.message });
+      }
+      return res.status(500);
     }
   }
 
@@ -81,8 +83,11 @@ class PautaController {
     try {
       const pautas = await PautaService.getAll();
       return res.status(200).json(pautas);
-    } catch (error: any) {
-      return res.status(500).json({ error: error.message });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return res.status(500).json({ error: error.message });
+      }
+      return res.status(500);
     }
   }
 
@@ -98,7 +103,7 @@ class PautaController {
    *          schema:
    *            type: integer
    *          required: true
-   *          description: ID da pauta  
+   *          description: ID da pauta
    *     responses:
    *       200:
    *         description: Pauta encontrada
@@ -122,8 +127,11 @@ class PautaController {
       } else {
         return res.status(404).json({ message: 'Pauta not found' });
       }
-    } catch (error: any) {
-      return res.status(500).json({ error: error.message });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return res.status(500).json({ error: error.message });
+      }
+      return res.status(500);
     }
   }
 
@@ -155,14 +163,19 @@ class PautaController {
 
   async getByIdWithAudiencias(req: Request, res: Response): Promise<Response> {
     try {
-      const pauta = await PautaService.getByIdWithAudiencias(Number(req.params.id));
+      const pauta = await PautaService.getByIdWithAudiencias(
+        Number(req.params.id),
+      );
       if (pauta) {
         return res.status(200).json(pauta);
       } else {
         return res.status(404).json({ message: 'Pauta not found' });
       }
-    } catch (error: any) {
-      return res.status(500).json({ error: error.message });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return res.status(500).json({ error: error.message });
+      }
+      return res.status(500);
     }
   }
 
@@ -217,12 +230,15 @@ class PautaController {
     try {
       const pauta = await PautaService.update(Number(req.params.id), req.body);
       return res.status(200).json(pauta);
-    } catch (error: any) {
-      return res.status(500).json({ error: error.message });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return res.status(500).json({ error: error.message });
+      }
+      return res.status(500);
     }
   }
 
-   /**
+  /**
    * @swagger
    * /pautas/{id}:
    *   delete:
@@ -248,8 +264,11 @@ class PautaController {
     try {
       const pauta = await PautaService.delete(Number(req.params.id));
       return res.status(200).json(pauta);
-    } catch (error: any) {
-      return res.status(500).json({ error: error.message });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return res.status(500).json({ error: error.message });
+      }
+      return res.status(500);
     }
   }
 }

@@ -7,8 +7,11 @@ import { cleanDataSet } from './helps/cleanData';
 import { extractPartes } from './helps/partesExtractor';
 import { determineTurno } from './helps/determineTurno';
 
-export const processExcel = async (filePath: string, fileGenerationDate: Date): Promise<Audiencia[]> => {
-  console.log(filePath)
+export const processExcel = async (
+  filePath: string,
+  fileGenerationDate: Date,
+): Promise<Audiencia[]> => {
+  console.log(filePath);
 
   // Verifique se o arquivo existe
   if (!fs.existsSync(filePath)) {
@@ -20,7 +23,10 @@ export const processExcel = async (filePath: string, fileGenerationDate: Date): 
     select: { data_geracao: true },
   });
 
-  if (lastProcessedDate && fileGenerationDate <= lastProcessedDate.data_geracao) {
+  if (
+    lastProcessedDate &&
+    fileGenerationDate <= lastProcessedDate.data_geracao
+  ) {
     throw new Error('Uploaded file is not the most recent.');
   }
 
@@ -31,7 +37,7 @@ export const processExcel = async (filePath: string, fileGenerationDate: Date): 
 
   for (const row of cleanedData) {
     //console.log(row)
-    const [datePart, timePart] = (row.Data).split(' ');
+    const [datePart, timePart] = row.Data.split(' ');
     //console.log(datePart)
 
     const dateParts = datePart.split('/');
@@ -45,10 +51,12 @@ export const processExcel = async (filePath: string, fileGenerationDate: Date): 
     let year = parseInt(dateParts[2], 10);
 
     if (year < 100) {
-        year += 2000;
+      year += 2000;
     }
 
-    console.log(`Parsed date parts - day: ${day}, month: ${month + 1}, year: ${year}`);
+    console.log(
+      `Parsed date parts - day: ${day}, month: ${month + 1}, year: ${year}`,
+    );
 
     const date = new Date(year, month, day);
     if (isNaN(date.getTime())) {
@@ -95,7 +103,7 @@ export const processExcel = async (filePath: string, fileGenerationDate: Date): 
         const dateText = `${fileGenerationDate.toISOString().split('T')[0]} \n${changesText}\n`;
         audienciaData.changes = `${existingChanges}${existingChanges ? '\n' : ''}${dateText}`;
         console.log(`Changes for processo ${existingAudiencia.processo}:`);
-        changes.forEach(change => console.log(`  - ${change}`));
+        changes.forEach((change) => console.log(`  - ${change}`));
 
         const updatedAudiencia = await prisma.audiencia.update({
           where: { processo },
@@ -104,11 +112,10 @@ export const processExcel = async (filePath: string, fileGenerationDate: Date): 
             data_geracao: fileGenerationDate,
           },
         });
-        audiencias.push(updatedAudiencia)
+        audiencias.push(updatedAudiencia);
       } else {
         audiencias.push(existingAudiencia);
       }
-
     } else {
       const newAudiencia = await prisma.audiencia.create({
         data: audienciaData,

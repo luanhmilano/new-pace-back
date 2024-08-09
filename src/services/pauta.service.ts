@@ -25,7 +25,6 @@ class PautaService {
   async delete(id: number): Promise<Pauta> {
     return PautaRepository.delete(id);
   }
-
 }
 
 export default new PautaService();

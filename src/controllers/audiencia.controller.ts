@@ -4,13 +4,12 @@ import AudienciaService from '../services/audiencia.service';
 
 /**
  * @swagger
- * tags: 
+ * tags:
  *  name: Audiencias
  *  description: Operações relacionadas a audiências
  */
 
 class AudienciaController {
-
   /**
    * @swagger
    * /audiencias:
@@ -43,7 +42,7 @@ class AudienciaController {
    *                 type: string
    *               situacao:
    *                 type: string
-   *             example: 
+   *             example:
    *               data: '2024-07-25'
    *               hora: '10:00'
    *               processo: '0000001-00.2024.5.00.0001'
@@ -68,8 +67,11 @@ class AudienciaController {
     try {
       const newAudiencia = await AudienciaService.createAudiencia(req.body);
       return res.status(201).json(newAudiencia);
-    } catch (error: any) {
-      return res.status(500).json({ error: error.message });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return res.status(500).json({ error: error.message });
+      }
+      return res.status(500);
     }
   }
 
@@ -96,8 +98,11 @@ class AudienciaController {
     try {
       const audiencias = await AudienciaService.getAllAudiencias();
       return res.status(200).json(audiencias);
-    } catch (error: any) {
-      return res.status(500).json({ error: error.message });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return res.status(500).json({ error: error.message });
+      }
+      return res.status(500);
     }
   }
 
@@ -131,14 +136,19 @@ class AudienciaController {
 
   async getAudienciaById(req: Request, res: Response): Promise<Response> {
     try {
-      const audiencia = await AudienciaService.getAudienciaById(parseInt(req.params.id, 10));
+      const audiencia = await AudienciaService.getAudienciaById(
+        parseInt(req.params.id, 10),
+      );
       if (audiencia) {
         return res.status(200).json(audiencia);
       } else {
         return res.status(404).json({ error: 'Audiencia not found' });
       }
-    } catch (error: any) {
-      return res.status(500).json({ error: error.message });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return res.status(500).json({ error: error.message });
+      }
+      return res.status(500);
     }
   }
 
@@ -181,7 +191,7 @@ class AudienciaController {
    *                 type: string
    *               situacao:
    *                 type: string
-   *             example: 
+   *             example:
    *               data: '2024-07-25'
    *               hora: '10:00'
    *               processo: '0000001-00.2024.5.00.0001'
@@ -206,10 +216,16 @@ class AudienciaController {
 
   async updateAudiencia(req: Request, res: Response): Promise<Response> {
     try {
-      const updatedAudiencia = await AudienciaService.updateAudiencia(parseInt(req.params.id, 10), req.body);
+      const updatedAudiencia = await AudienciaService.updateAudiencia(
+        parseInt(req.params.id, 10),
+        req.body,
+      );
       return res.status(200).json(updatedAudiencia);
-    } catch (error: any) {
-      return res.status(500).json({ error: error.message });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return res.status(500).json({ error: error.message });
+      }
+      return res.status(500);
     }
   }
 
@@ -237,10 +253,15 @@ class AudienciaController {
 
   async deleteAudiencia(req: Request, res: Response): Promise<Response> {
     try {
-      const deletedAudiencia = await AudienciaService.deleteAudiencia(parseInt(req.params.id, 10));
+      const deletedAudiencia = await AudienciaService.deleteAudiencia(
+        parseInt(req.params.id, 10),
+      );
       return res.status(200).json(deletedAudiencia);
-    } catch (error: any) {
-      return res.status(500).json({ error: error.message });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return res.status(500).json({ error: error.message });
+      }
+      return res.status(500);
     }
   }
 
@@ -268,13 +289,21 @@ class AudienciaController {
     try {
       const audiencias = await AudienciaService.getAllAudiencias();
       const excelBuffer = generateExcel(audiencias);
-  
-      res.setHeader('Content-Disposition', 'attachment; filename=audiencias.xlsx');
-      res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+
+      res.setHeader(
+        'Content-Disposition',
+        'attachment; filename=audiencias.xlsx',
+      );
+      res.setHeader(
+        'Content-Type',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      );
       return res.send(excelBuffer);
-  
-    } catch (error: any) {
-      return res.status(500).json({ error: error.message });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return res.status(500).json({ error: error.message });
+      }
+      return res.status(500);
     }
   }
 
@@ -339,12 +368,15 @@ class AudienciaController {
         orgao_julgador: req.query.orgao_julgador as string,
         sala: req.query.sala as string,
       };
-      
+
       const audiencias = await AudienciaService.getByFilters(filters);
-      console.log("Cura Mudez")
+      console.log('Cura Mudez');
       return res.status(200).json(audiencias);
-    } catch (error: any) {
-      return res.status(500).json({ error: error.message });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return res.status(500).json({ error: error.message });
+      }
+      return res.status(500);
     }
   }
 }
