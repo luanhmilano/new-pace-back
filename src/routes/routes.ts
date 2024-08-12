@@ -19,8 +19,8 @@ routes.get('/audiencias/:id', AudienciaController.getAudienciaById);
 routes.put('/audiencias/:id', AudienciaController.updateAudiencia);
 routes.delete('/audiencias/:id', AudienciaController.deleteAudiencia);
 // Rota para exportar audiências para Excel
-routes.get('/audiencias_export', AudienciaController.exportAudiencias);
+routes.get('/audiencias-export', AudienciaController.exportAudiencias);
 // Rota para GET com filtros
-routes.get('/audiencias_filter', AudienciaController.getAudienciasByFilters);
+routes.get('/audiencias-filter', AudienciaController.getAudienciasByFilters);
 
 export default routes;
