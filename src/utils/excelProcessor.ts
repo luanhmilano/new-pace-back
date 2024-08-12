@@ -36,13 +36,17 @@ export const processExcel = async (
   const audiencias: Audiencia[] = [];
 
   for (const row of cleanedData) {
+    if (!row.Data) {
+      console.warn(`Data is undefined for row: ${JSON.stringify(row)}`);
+      continue;
+    }
     //console.log(row)
     const [datePart, timePart] = row.Data.split(' ');
     //console.log(datePart)
 
     const dateParts = datePart.split('/');
     if (dateParts.length !== 3) {
-      //console.warn(`Invalid date format for row: ${JSON.stringify(row)}`);
+      console.warn(`Invalid date format for row: ${JSON.stringify(row)}`);
       continue;
     }
 
