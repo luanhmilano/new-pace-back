@@ -5,7 +5,7 @@ import { upload } from './middlewares/upload.middleware';
 import { extractInfoMiddleware } from './middlewares/extractInfo.middleware';
 import { processExcel } from './utils/excelProcessor';
 import { resetData } from './controllers/reset.controller';
-import routes from './routes/routes';
+//import routes from './routes/routes';
 import { routespace } from './routes';
 import { organizeAudienciasInPautas } from './utils/organizePautas';
 import { setupSwagger } from './swagger';
@@ -15,7 +15,6 @@ const app = express();
 app.use(cors());
 app.use(json());
 
-app.use(routes);
 //app.use(routespace);
 
 setupSwagger(app);
@@ -46,5 +45,7 @@ app.post(
 
 // Rota para resetar dados
 app.post('/reset-data', resetData);
+
+app.use(routespace);
 
 export default app;
