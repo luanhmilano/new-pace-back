@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { RequestHeaders } from '../../sapiensOperations/resquest/RequestHeaders';
+import { RequestHeaders } from '../../sapiensOperations/request/RequestHeaders';
 export async function requestSapiens(
   cookie: string,
   payload: string,
