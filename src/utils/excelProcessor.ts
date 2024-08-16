@@ -27,7 +27,7 @@ export const processExcel = async (
     lastProcessedDate &&
     fileGenerationDate <= lastProcessedDate.data_geracao
   ) {
-    throw new Error('Uploaded file is not the most recent.');
+    throw new Error('Planilha desatualizada, envie a mais recente.');
   }
 
   const json = readExcelFile(filePath);
