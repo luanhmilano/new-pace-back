@@ -1,2 +1,0 @@
-DATABASE_URL="postgresql://postgres:alakazam@localhost:5432/db?schema=public"
-PORT=3000

@@ -18,16 +18,17 @@ model Audiencia {
   data          String
   hora          String
   processo      String   @unique
-  orgaoJulgador String
+  orgao_julgador String
   partes        String
   classe        String
-  tipoAudiencia String
+  tipo_audiencia String
   sala          String
   situacao      String
-  dataGeracao   DateTime
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  data_geracao   DateTime
   pautaId       Int?
+  turno         String
+  tipo_contest  String?
+  changes       String?
   pauta         Pauta?    @relation(fields: [pautaId], references: [id])
 }
 
@@ -35,9 +36,9 @@ model Pauta {
   id            Int      @id @default(autoincrement())
   data          String
   turno         String
-  orgaoJulgador String
+  orgao_julgador String
   sala          String
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
   audiencias    Audiencia[]
 }
