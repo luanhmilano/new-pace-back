@@ -1,4 +1,5 @@
 import { PrismaClient, Pauta } from '@prisma/client';
+import compararVara from '../utils/helps/compararVara';
 
 const prisma = new PrismaClient();
 
@@ -28,6 +29,36 @@ class PautaRepository {
         audiencias: true, // Inclui as audiências relacionadas à pauta
       },
     });
+  }
+
+  async findUniqueOrgaosJulgadores(): Promise<string[]> {
+    const orgaosJulgadores = await prisma.pauta.findMany({
+      select: {
+        orgao_julgador: true,
+      },
+      distinct: ['orgao_julgador'],
+    });
+
+    return orgaosJulgadores
+      .map((pauta) => pauta.orgao_julgador)
+      .sort((a, b) => compararVara(a, b));
+  }
+
+  async findSalasByOrgaoJulgador(orgao_julgador: string): Promise<string[]> {
+    const salas = await prisma.pauta.findMany({
+      where: {
+        orgao_julgador: orgao_julgador,
+      },
+      select: {
+        sala: true,
+      },
+      distinct: ['sala'],
+      orderBy: {
+        sala: 'asc',
+      },
+    });
+
+    return salas.map((pauta) => pauta.sala);
   }
 
   async update(

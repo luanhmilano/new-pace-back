@@ -26,3 +26,11 @@ routerPautas.put('/pautas/:id', async (req, res) => {
 routerPautas.delete('/pautas/:id', async (req, res) => {
   return PautaController.delete(req, res);
 });
+
+routerPautas.get('/orgaos-julgadores', async (req, res) => {
+  return PautaController.getOrgaosJulgadores(req, res);
+});
+
+routerPautas.get('/salas/:orgao_julgador', async (req, res) => {
+  return PautaController.getSalasByOrgaoJulgador(req, res);
+});

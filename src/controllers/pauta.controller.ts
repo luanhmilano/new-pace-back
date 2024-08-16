@@ -179,6 +179,34 @@ class PautaController {
     }
   }
 
+  async getOrgaosJulgadores(req: Request, res: Response): Promise<Response> {
+    try {
+      const orgaosJulgadores = await PautaService.getUniqueOrgaosJulgadores();
+      return res.status(200).json(orgaosJulgadores);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return res.status(500).json({ error: error.message });
+      }
+      return res.status(500);
+    }
+  }
+
+  async getSalasByOrgaoJulgador(
+    req: Request,
+    res: Response,
+  ): Promise<Response> {
+    try {
+      const { orgao_julgador } = req.params;
+      const salas = await PautaService.getSalasByOrgaoJulgador(orgao_julgador);
+      return res.status(200).json(salas);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return res.status(500).json({ error: error.message });
+      }
+      return res.status(500);
+    }
+  }
+
   /**
    * @swagger
    * /pautas/{id}:

@@ -18,6 +18,14 @@ class PautaService {
     return PautaRepository.findByIdWithAudiencias(id);
   }
 
+  async getUniqueOrgaosJulgadores(): Promise<string[]> {
+    return PautaRepository.findUniqueOrgaosJulgadores();
+  }
+
+  async getSalasByOrgaoJulgador(orgao_julgador: string): Promise<string[]> {
+    return PautaRepository.findSalasByOrgaoJulgador(orgao_julgador);
+  }
+
   async update(id: number, data: Partial<Pauta>): Promise<Pauta> {
     return PautaRepository.update(id, data);
   }
