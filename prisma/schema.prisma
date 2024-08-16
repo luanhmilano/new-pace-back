@@ -27,6 +27,7 @@ model Audiencia {
   data_geracao   DateTime
   pautaId       Int?
   turno         String
+  tipo_contest  String?
   changes       String?
   pauta         Pauta?    @relation(fields: [pautaId], references: [id])
 }
