@@ -58,4 +58,13 @@ export class AudienciaRepository {
       },
     });
   }
+
+  async updateContestacao(processo: string, tipo: string): Promise<Audiencia> {
+    return prisma.audiencia.update({
+      where: { processo },
+      data: {
+        tipo_contest: tipo,
+      },
+    });
+  }
 }

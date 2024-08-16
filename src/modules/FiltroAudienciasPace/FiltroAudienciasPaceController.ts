@@ -2,10 +2,11 @@
 import { Request, Response } from 'express';
 import { FiltroAudienciasPaceUseCase } from './FiltroAudienciasPaceUseCase';
 import { ILoginDTO } from '../../DTO/LoginDTO';
+import audienciaService from '../../services/audiencia.service';
 
 export class FiltroAudienciasPaceController {
   constructor(
-    private getInformationsForPaceUseCase: FiltroAudienciasPaceUseCase,
+    private filtroAudiencasPaceUseCase: FiltroAudienciasPaceUseCase,
   ) {}
   async handle(request: Request, response: Response): Promise<Response> {
     const { cpf, senha } = request.body;
@@ -15,10 +16,20 @@ export class FiltroAudienciasPaceController {
       senha: senha,
     };
     try {
-      const result = await this.getInformationsForPaceUseCase.execute(
+      const result = await this.filtroAudiencasPaceUseCase.execute(
         data,
         audiencias,
       );
+
+      if (result.length > 0) {
+        for (const i of result) {
+          const updatedAudiencia = await audienciaService.updateContestacao(
+            i.processo,
+            i.tipo,
+          );
+          console.log(updatedAudiencia);
+        }
+      }
       return response.status(200).json(result);
     } catch (error: any) {
       return response.status(400).json({

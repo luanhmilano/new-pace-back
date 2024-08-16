@@ -42,6 +42,10 @@ class AudienciaService {
   }): Promise<Audiencia[]> {
     return this.audienciaRepository.findByFilters(filters);
   }
+
+  async updateContestacao(processo: string, tipo: string) {
+    return this.audienciaRepository.updateContestacao(processo, tipo);
+  }
 }
 
 export default new AudienciaService();
