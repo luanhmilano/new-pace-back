@@ -23,11 +23,20 @@ export const processExcel = async (
     select: { data_geracao: true },
   });
 
+  const dia = lastProcessedDate?.data_geracao.getDate();
+  const mes = lastProcessedDate?.data_geracao.getMonth();
+  const ano = lastProcessedDate?.data_geracao.getFullYear();
+  const hour = lastProcessedDate?.data_geracao.getHours();
+  const minuto = lastProcessedDate?.data_geracao.getMinutes();
+  console.log(dia, mes! + 1, ano, hour, minuto);
+
   if (
     lastProcessedDate &&
     fileGenerationDate <= lastProcessedDate.data_geracao
   ) {
-    throw new Error('Planilha desatualizada, envie a mais recente.');
+    throw new Error(
+      `Planilha desatualizada, envie uma mais atual que: ${dia}/${mes! + 1}/${ano} - ${hour}:${minuto}`,
+    );
   }
 
   const json = readExcelFile(filePath);
