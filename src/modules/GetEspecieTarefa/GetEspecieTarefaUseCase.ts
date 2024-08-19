@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { GetEspecieTarefaDTO } from '../../DTO/GetEspecieTarefaDTO';
+import { QueryDTO } from '../../DTO/QueryDTO';
 import { RequestSapiens } from '../../pythonRequest/requestSapiens';
 import { RequestGetEspecieTarefa } from '../../sapiensOperations/request/RequestGetEspecieTarefa';
 import { loginUseCase } from '../LoginUsuario';
 
 export class GetEspecieTarefaUseCase {
   constructor(private RequestGetEspecieTarefa: RequestGetEspecieTarefa) {}
-  async execute(data: GetEspecieTarefaDTO): Promise<any> {
+  async execute(data: QueryDTO): Promise<any> {
     const cookie: string = await loginUseCase.execute(data.login);
 
     const payload = await this.RequestGetEspecieTarefa.execute(data.query);

@@ -1,6 +1,6 @@
 import { ILoginDTO } from './LoginDTO';
 
-export interface GetEspecieTarefaDTO {
+export interface QueryDTO {
   login: ILoginDTO;
   query: string;
 }
