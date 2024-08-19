@@ -10,7 +10,7 @@ export class FiltroAudienciasPaceController {
   ) {}
   async handle(request: Request, response: Response): Promise<Response> {
     const { cpf, senha } = request.body;
-    const { audiencias } = request.body;
+    const { processos } = request.body;
     const data: ILoginDTO = {
       cpf: cpf,
       senha: senha,
@@ -18,7 +18,7 @@ export class FiltroAudienciasPaceController {
     try {
       const result = await this.filtroAudiencasPaceUseCase.execute(
         data,
-        audiencias,
+        processos,
       );
 
       if (result.length > 0) {
