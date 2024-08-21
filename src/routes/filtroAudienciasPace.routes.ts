@@ -5,6 +5,7 @@ import { getSetorResponsavelTarefaController } from '../modules/GetSetorResponsa
 import { getUsuarioResponsavelController } from '../modules/GetUsuarioResponsavelTarefa';
 import { createTarefaLoteController } from '../modules/CreateTarefaLote';
 import { filtroAssuntoPaceController } from '../modules/FiltroAssuntoPace';
+import { createTarefaLoteTesteController } from '../modules/CreateTarefaLoteTeste';
 
 export const routerFiltroAudienciasPace = Router();
 
@@ -33,4 +34,8 @@ routerFiltroAudienciasPace.get('/getUsuarioResponsavel', async (req, res) => {
 
 routerFiltroAudienciasPace.post('/insertTarefasLote', async (req, res) => {
   return createTarefaLoteController.handle(req, res);
+});
+
+routerFiltroAudienciasPace.post('/insertTarefasLoteTeste', async (req, res) => {
+  return createTarefaLoteTesteController.handle(req, res);
 });
