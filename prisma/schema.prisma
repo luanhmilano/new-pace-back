@@ -29,6 +29,7 @@ model Audiencia {
   turno         String
   tipo_contest  String?
   changes       String?
+  assunto       String?
   pauta         Pauta?    @relation(fields: [pautaId], references: [id])
 }
 
