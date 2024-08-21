@@ -33,7 +33,7 @@ app.post(
       );
       await organizeAudienciasInPautas(); // Organiza as pautas após o upload, sem enviar resposta
       console.log('Audiências extraídas com sucesso.');
-      res.status(201).send('Siiiiu'); // Envia a resposta aqui
+      res.status(201).send('RECEBA!'); // Envia a resposta aqui
     } catch (error: unknown) {
       if (error instanceof Error) {
         return res.status(400).json({ error: error.message });
