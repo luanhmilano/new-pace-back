@@ -4,11 +4,16 @@ import { getEspecieTarefaController } from '../modules/GetEspecieTarefa';
 import { getSetorResponsavelTarefaController } from '../modules/GetSetorResponsavelTarefa';
 import { getUsuarioResponsavelController } from '../modules/GetUsuarioResponsavelTarefa';
 import { createTarefaLoteController } from '../modules/CreateTarefaLote';
+import { filtroAssuntoPaceController } from '../modules/FiltroAssuntoPace';
 
 export const routerFiltroAudienciasPace = Router();
 
 routerFiltroAudienciasPace.post('/filtroAudienciasPace', async (req, res) => {
   return filtroAudienciasPaceController.handle(req, res);
+});
+
+routerFiltroAudienciasPace.post('/filtroAssuntoPace', async (req, res) => {
+  return filtroAssuntoPaceController.handle(req, res);
 });
 
 routerFiltroAudienciasPace.get('/getEspecieTarefa', async (req, res) => {

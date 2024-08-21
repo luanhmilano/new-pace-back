@@ -46,6 +46,10 @@ class AudienciaService {
   async updateContestacao(processo: string, tipo: string) {
     return this.audienciaRepository.updateContestacao(processo, tipo);
   }
+
+  async updateAssunto(processo: string, assunto: string) {
+    return this.audienciaRepository.updateAssunto(processo, assunto);
+  }
 }
 
 export default new AudienciaService();
