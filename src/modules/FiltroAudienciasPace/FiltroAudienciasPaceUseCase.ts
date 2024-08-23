@@ -11,6 +11,7 @@ import { getProcessoJudicialUseCase } from '../GetProcessoJudicial';
 import { ResponseProcessoJudicial } from '../../sapiensOperations/response/ResponseProcessoJudicial';
 import { PastaResponseArray } from '../../sapiensOperations/response/ResponsePasta';
 import { getPastaProcessoJudicialUseCase } from '../GetPasta';
+import { getUsuarioUseCase } from '../GetUsuario';
 
 interface audienciasTipadas {
   processo: string;
@@ -28,6 +29,9 @@ export class FiltroAudienciasPaceUseCase {
     try {
       const cookie: string = await loginUseCase.execute(data);
 
+      const usuario = await getUsuarioUseCase.execute(cookie);
+      console.log(usuario[0].nome);
+
       for (const audiencia of audiencias) {
         try {
           const processo: ResponseProcessoJudicial[] =
@@ -39,7 +43,10 @@ export class FiltroAudienciasPaceUseCase {
             await getPastaProcessoJudicialUseCase.execute(cookie, id_processo);
 
           const NUP = pasta[0].NUP;
-          console.log(NUP);
+
+          console.log('---------------------------');
+          console.log(usuario[0].nome);
+          console.log('---------------------------');
 
           const objectGetArvoreDocumento: IGetArvoreDocumentoDTO = {
             nup: NUP,

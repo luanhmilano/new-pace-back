@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from 'express';
 import { FiltroAudienciasPaceUseCase } from './FiltroAudienciasPaceUseCase';
@@ -27,7 +28,6 @@ export class FiltroAudienciasPaceController {
             i.processo,
             i.tipo,
           );
-          console.log(updatedAudiencia);
         }
       }
       return response.status(200).json(result);

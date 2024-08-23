@@ -12,6 +12,7 @@ import { PastaResponseArray } from '../../sapiensOperations/response/ResponsePas
 import { getPastaProcessoJudicialUseCase } from '../GetPasta';
 import { getCapaUseCase } from '../GetCapa';
 import { getXPathText } from './helps/GetTextoPorXPATH';
+import { getUsuarioUseCase } from '../GetUsuario';
 
 interface audienciasTipadas {
   processo: string;
@@ -28,6 +29,9 @@ export class FiltroAssuntoPaceUseCase {
     try {
       const cookie: string = await loginUseCase.execute(data);
       console.log(audiencias);
+
+      const usuario = await getUsuarioUseCase.execute(cookie);
+      console.log(usuario[0].nome);
 
       for (const audiencia of audiencias) {
         try {
@@ -61,7 +65,9 @@ export class FiltroAssuntoPaceUseCase {
                 Documento.movimento == 'CAPA',
             );
 
-          console.log(objectCapa);
+          console.log('---------------------------');
+          console.log(usuario[0].nome);
+          console.log('---------------------------');
 
           if (!objectCapa) {
             console.warn(`CAPA NÃO LOCALIZADA PARA O PROCESSO: ${audiencia}`);
