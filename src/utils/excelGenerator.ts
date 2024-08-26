@@ -1,13 +1,16 @@
 import * as xlsx from 'xlsx';
 import { Audiencia } from '@prisma/client';
+import { convertDataToDefault } from './helps/convertDataToDefault';
 
 export const generateExcel = (audiencias: Audiencia[]): Buffer => {
   const data = audiencias.map((audiencia) => ({
     'Pauta ID': audiencia.pautaId,
-    Data: audiencia.data,
+    Data: convertDataToDefault(audiencia.data),
     Hora: audiencia.hora,
     Turno: audiencia.turno,
     Processo: audiencia.processo,
+    'Tipo de Contestação': audiencia.tipo_contest,
+    Assunto: audiencia.assunto,
     'Órgão Julgador': audiencia.orgao_julgador,
     Partes: audiencia.partes,
     Classe: audiencia.classe,
