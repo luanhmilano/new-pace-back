@@ -1,33 +1,34 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-async-promise-executor */
+import { JSDOM } from 'jsdom';
 import { loginUseCase } from '../LoginUsuario';
 import { IGetArvoreDocumentoDTO } from '../../DTO/GetArvoreDocumentoDTO';
 import { ResponseArvoreDeDocumento } from '../../sapiensOperations/response/ResponseArvoreDeDocumento';
 import { getArvoreDocumentoUseCase } from '../GetArvoreDocumento/index';
-import { contestacaoIsInvalid } from './helps/ContestacaoIsInvalid';
-import { getDocumentoUseCase } from '../GetDocumento';
 import { ILoginDTO } from '../../DTO/LoginDTO';
 import { getProcessoJudicialUseCase } from '../GetProcessoJudicial';
 import { ResponseProcessoJudicial } from '../../sapiensOperations/response/ResponseProcessoJudicial';
 import { PastaResponseArray } from '../../sapiensOperations/response/ResponsePasta';
 import { getPastaProcessoJudicialUseCase } from '../GetPasta';
+import { getCapaUseCase } from '../GetCapa';
+import { getXPathText } from './helps/GetTextoPorXPATH';
 import { getUsuarioUseCase } from '../GetUsuario';
 
 interface audienciasTipadas {
   processo: string;
-  tipo: string;
+  assunto: string;
 }
 
-export class FiltroAudienciasPaceUseCase {
+export class FiltroAssuntoPaceUseCase {
   async execute(
     data: ILoginDTO,
     audiencias: string[],
   ): Promise<audienciasTipadas[]> {
-    console.log('---FILTRO CONTESTAÇÃO');
+    console.log('---FILTRO ASSUNTO');
     const response: audienciasTipadas[] = [];
-    console.log(audiencias);
     try {
       const cookie: string = await loginUseCase.execute(data);
+      console.log(audiencias);
 
       const usuario = await getUsuarioUseCase.execute(cookie);
       console.log(usuario[0].nome);
@@ -38,15 +39,10 @@ export class FiltroAudienciasPaceUseCase {
             await getProcessoJudicialUseCase.execute(cookie, audiencia);
 
           const id_processo = processo[0].id.toString();
-          console.log(id_processo);
           const pasta: PastaResponseArray =
             await getPastaProcessoJudicialUseCase.execute(cookie, id_processo);
 
           const NUP = pasta[0].NUP;
-
-          console.log('---------------------------');
-          console.log(usuario[0].nome);
-          console.log('---------------------------');
 
           const objectGetArvoreDocumento: IGetArvoreDocumentoDTO = {
             nup: NUP,
@@ -55,42 +51,43 @@ export class FiltroAudienciasPaceUseCase {
 
           let arrayDeDocumentos: ResponseArvoreDeDocumento[] = [];
           try {
-            arrayDeDocumentos = (
-              await getArvoreDocumentoUseCase.execute(objectGetArvoreDocumento)
-            ).reverse();
+            arrayDeDocumentos = await getArvoreDocumentoUseCase.execute(
+              objectGetArvoreDocumento,
+            );
           } catch (error) {
             console.log('Erro ao buscar árvore de documentos: ', error);
           }
 
-          const objectContestacao: ResponseArvoreDeDocumento | undefined =
+          const objectCapa: ResponseArvoreDeDocumento | undefined =
             arrayDeDocumentos.find(
               (Documento) =>
-                Documento.documentoJuntado.tipoDocumento.sigla == 'CONTEST' ||
-                Documento.documentoJuntado.tipoDocumento.sigla == 'PROPACORD',
+                Documento.documentoJuntado.tipoDocumento.nome == 'CAPA' ||
+                Documento.movimento == 'CAPA',
             );
 
-          if (!objectContestacao) {
-            console.warn(
-              `CONTESTAÇÃO NÃO LOCALIZADA PARA O PROCESSO: ${audiencia}`,
-            );
+          console.log('---------------------------');
+          console.log(usuario[0].nome);
+          console.log('---------------------------');
+
+          if (!objectCapa) {
+            console.warn(`CAPA NÃO LOCALIZADA PARA O PROCESSO: ${audiencia}`);
             continue;
           }
 
-          const idContestacaoParaPesquisa: number =
-            objectContestacao!.documentoJuntado.componentesDigitais[0].id;
-          const paginaContestacao: string = await getDocumentoUseCase.execute({
-            cookie,
-            idDocument: idContestacaoParaPesquisa,
-          });
-
-          const tipoContestacao = await contestacaoIsInvalid(paginaContestacao);
+          const capa: string = await getCapaUseCase.execute(NUP, cookie);
+          const capaFormatada = new JSDOM(capa);
+          const xpathAssunto = '/html/body/div/div[7]/table/tbody/tr[2]/td[1]';
+          const assunto = await getXPathText(capaFormatada, xpathAssunto);
+          console.log('---ASSUNTO');
+          console.log(assunto);
 
           const objectAudienciaTipada = {
             processo: audiencia,
-            tipo: tipoContestacao,
+            assunto: assunto,
           };
 
           response.push(objectAudienciaTipada);
+
           console.log('PROCESSOS IDENTIFICADOS: ');
           console.log(response);
         } catch (error) {
