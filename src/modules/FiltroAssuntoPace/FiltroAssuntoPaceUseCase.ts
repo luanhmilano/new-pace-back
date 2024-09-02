@@ -13,6 +13,7 @@ import { getPastaProcessoJudicialUseCase } from '../GetPasta';
 import { getCapaUseCase } from '../GetCapa';
 import { getXPathText } from './helps/GetTextoPorXPATH';
 import { getUsuarioUseCase } from '../GetUsuario';
+import { identificarDivXpathAssunto } from './helps/identificarDivXpathAssunto';
 
 interface audienciasTipadas {
   processo: string;
@@ -76,10 +77,9 @@ export class FiltroAssuntoPaceUseCase {
 
           const capa: string = await getCapaUseCase.execute(NUP, cookie);
           const capaFormatada = new JSDOM(capa);
-          const xpathAssunto = '/html/body/div/div[7]/table/tbody/tr[2]/td[1]';
+          const divNumberAssunto = identificarDivXpathAssunto(capaFormatada);
+          const xpathAssunto = `/html/body/div/div[${divNumberAssunto}]/table/tbody/tr[2]/td[1]`;
           const assunto = await getXPathText(capaFormatada, xpathAssunto);
-          console.log('---ASSUNTO');
-          console.log(assunto);
 
           const objectAudienciaTipada = {
             processo: audiencia,
