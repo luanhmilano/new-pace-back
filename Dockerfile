@@ -6,24 +6,20 @@ WORKDIR /app
 
 # Copiar o package.json e o package-lock.json
 COPY package*.json ./
+COPY tsconfig.json ./
+COPY prisma ./prisma/
 
 # Instalar dependências de produção
-RUN npm install --only=production
+RUN npm install
 
 # Copiar o restante dos arquivos do projeto
 COPY . .
 
-# Gerar o Prisma Client
-RUN npm run prisma:generate
-
 # Compilar o código TypeScript para JavaScript
-RUN npm run build
+RUN npx prisma generate && npm run build
 
 # Expor a porta da aplicação
-EXPOSE 4000
-
-# Definir variáveis de ambiente para produção
-ENV NODE_ENV=production
+EXPOSE 3001
 
 # Executar a aplicação
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "prod"]
