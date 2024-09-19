@@ -12,6 +12,8 @@ COPY prisma ./prisma/
 # Instalar dependências de produção
 RUN npm install
 
+RUN apt-get update && apt-get install -y python3
+
 # Copiar o restante dos arquivos do projeto
 COPY . .
 
