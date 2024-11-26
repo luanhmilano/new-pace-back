@@ -285,9 +285,17 @@ class AudienciaController {
    *         description: Erro no servidor
    */
 
-  async exportAudiencias(_req: Request, res: Response): Promise<Response> {
+  async exportAudiencias(req: Request, res: Response): Promise<Response> {
     try {
-      const audiencias = await AudienciaService.getAllAudiencias();
+      const filters = {
+        startDate: req.query.startDate as string,
+        endDate: req.query.endDate as string,
+        turno: req.query.turno as string,
+        orgao_julgador: req.query.orgao_julgador as string,
+        sala: req.query.sala as string,
+      };
+
+      const audiencias = await AudienciaService.getByFilters(filters);
       const excelBuffer = generateExcel(audiencias);
 
       res.setHeader(
