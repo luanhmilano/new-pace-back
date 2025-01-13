@@ -13,5 +13,6 @@ export const extractPartes = (partes: string): string => {
     return match[1].trim();
   }
 
-  return partes.split(' - ')[0].trim();
+  const result = partes.split(' - ')[0].trim();
+  return result.length === 0 ? 'MENOR' : result;
 };
