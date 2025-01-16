@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 
 const extractDateFromFileName = (fileName: string): Date => {
-  const regex = /gerado em (\d{2}\.\d{2}\.\d{4}) (\d{2})h(\d{2})/;
+  console.log(fileName);
+  const regex = /gerado em (\d{2}\.\d{2}\.\d{4}) (\d{1,2})h(\d{2})/i;
   const match = fileName.match(regex);
   if (!match) throw new Error('Invalid file name format');
 
