@@ -92,6 +92,8 @@ export const processExcel = async (
       existingChanges = existingAudiencia.changes || '';
     }
 
+    console.log(extractPartes(row.Partes));
+
     const audienciaData = {
       data: formattedDate,
       hora: timePart,
