@@ -54,6 +54,9 @@ const cleanData = (
   } else {
     audiencia = {
       ...commonFields,
+      assunto: sanitizeText(
+        item['processoTrf.p rocessoAssun toPrincipal'] || item['__EMPTY_5'],
+      ),
       tipo_audiencia: sanitizeText(
         item['Tipo de audiência'] || item['__EMPTY_6'],
       ),

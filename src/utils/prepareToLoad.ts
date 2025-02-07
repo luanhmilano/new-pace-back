@@ -29,6 +29,7 @@ export async function prepareToLoad(
         tipo_audiencia: row.tipo_audiencia,
         sala: String(row.sala),
         situacao: row.situacao,
+        assunto: row.assunto,
         data_geracao: dataGeracao,
         changes,
         turno: determineTurno(timePart),
