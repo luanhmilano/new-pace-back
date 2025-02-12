@@ -18,9 +18,13 @@ export async function dataWorker(
         [datePart, timePart] = linha.data.split(' ');
       } else {
         const match = RegExp(/(.+\/\d{2})(\d{2}:\d{2})/).exec(linha.data);
+        const matchNovissomo = linha.data.split(' ');
+
         if (match) {
           datePart = match[1];
           timePart = match[2];
+        } else if (matchNovissomo.length === 2) {
+          [datePart, timePart] = matchNovissomo;
         } else {
           throw new Error('Formato de data/hora inválido.');
         }

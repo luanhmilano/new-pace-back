@@ -30,6 +30,7 @@ export async function prepareToLoad(
         sala: String(row.sala),
         situacao: row.situacao,
         assunto: row.assunto,
+        advogados: row.advogados,
         data_geracao: dataGeracao,
         changes,
         turno: determineTurno(timePart),

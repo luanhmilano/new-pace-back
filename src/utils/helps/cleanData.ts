@@ -33,11 +33,11 @@ const cleanData = (
   const dataValue = dateKey ? sanitizeText(item[dateKey]) : '';
 
   const commonFields = {
-    data: dataValue || sanitizeText(item['Data']),
+    data: dataValue || sanitizeText(item['Data/Hora']),
     processo: sanitizeText(item['Processo'] || item['__EMPTY']),
     orgao_julgador: sanitizeText(item['Órgão julgador'] || item['__EMPTY_1']),
     partes: sanitizeText(item['Partes'] || item['__EMPTY_2']),
-    classe: sanitizeText(item['Classe'] || item['__EMPTY_3']),
+    classe: sanitizeText(item['Classe judicial'] || item['__EMPTY_3']),
   };
 
   let audiencia: IAudienciaPartial;
@@ -54,12 +54,9 @@ const cleanData = (
   } else {
     audiencia = {
       ...commonFields,
-      assunto: sanitizeText(
-        item['processoTrf.p rocessoAssun toPrincipal'] || item['__EMPTY_5'],
-      ),
-      tipo_audiencia: sanitizeText(
-        item['Tipo de audiência'] || item['__EMPTY_6'],
-      ),
+      advogados: sanitizeText(item['Advogados'] || item['__EMPTY_4']),
+      assunto: sanitizeText(item['Assunto'] || item['__EMPTY_5']),
+      tipo_audiencia: sanitizeText(item['Tipo'] || item['__EMPTY_6']),
       sala: sanitizeText(item['Sala'] || item['__EMPTY_7']),
       situacao: sanitizeText(item['Situação'] || item['__EMPTY_8']),
     };

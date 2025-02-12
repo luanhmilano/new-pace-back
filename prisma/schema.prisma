@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,32 +8,33 @@ datasource db {
 }
 
 model Audiencia {
-  id            Int      @id @default(autoincrement())
-  data          String
-  hora          String
-  processo      String   @unique
-  orgao_julgador String
-  partes        String
-  classe        String
-  tipo_audiencia String
-  sala          String
-  situacao      String
+  id             Int      @id @default(autoincrement())
+  data           String
+  hora           String
+  processo       String   @unique
+  partes         String
+  classe         String
+  sala           String
+  situacao       String
+  pautaId        Int?
   data_geracao   DateTime
-  pautaId       Int?
-  turno         String
-  tipo_contest  String?
-  changes       String?
-  assunto       String?
-  pauta         Pauta?    @relation(fields: [pautaId], references: [id])
+  orgao_julgador String
+  tipo_audiencia String
+  turno          String
+  changes        String?
+  tipo_contest   String?
+  assunto        String?
+  advogados      String?
+  pauta          Pauta?   @relation(fields: [pautaId], references: [id])
 }
 
 model Pauta {
-  id            Int      @id @default(autoincrement())
-  data          String
-  turno         String
+  id             Int         @id @default(autoincrement())
+  data           String
+  turno          String
+  sala           String
+  created_at     DateTime    @default(now())
   orgao_julgador String
-  sala          String
-  created_at     DateTime @default(now())
-  updated_at     DateTime @updatedAt
-  audiencias    Audiencia[]
+  updated_at     DateTime    @updatedAt
+  audiencias     Audiencia[]
 }

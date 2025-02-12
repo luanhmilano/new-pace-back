@@ -27,6 +27,10 @@ export const logChanges = (
     changes.push(`Situação: ${existing.situacao} -> ${updated.situacao}`);
   if (existing.turno !== updated.turno)
     changes.push(`Turno: ${existing.turno} -> ${updated.turno}`);
+  if (existing.advogados !== updated.advogados)
+    changes.push(`Advogados: ${existing.advogados} -> ${updated.advogados}`);
+  if (existing.assunto !== updated.assunto)
+    changes.push(`Assunto: ${existing.assunto} -> ${updated.assunto}`);
 
   return changes;
 };
