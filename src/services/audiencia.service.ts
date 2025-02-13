@@ -2,7 +2,7 @@ import { Audiencia } from '@prisma/client';
 import { AudienciaRepository } from '../repositories/audiencia.repository';
 
 class AudienciaService {
-  private audienciaRepository: AudienciaRepository;
+  private readonly audienciaRepository: AudienciaRepository;
 
   constructor() {
     this.audienciaRepository = new AudienciaRepository();

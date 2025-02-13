@@ -5,7 +5,7 @@ export interface IAudienciaPartial {
   partes: string;
   classe: string;
   tipo_audiencia: string;
-  advogados?: string | null;
+  advogados: string;
   assunto?: string | null;
   sala: string;
   situacao: string;

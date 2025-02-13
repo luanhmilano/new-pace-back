@@ -45,6 +45,7 @@ const cleanData = (
   if (fieldCount === 8) {
     audiencia = {
       ...commonFields,
+      advogados: '',
       tipo_audiencia: sanitizeText(
         item['Tipo de audiência'] || item['__EMPTY_4'],
       ),
